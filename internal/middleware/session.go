@@ -3,17 +3,23 @@ package middleware
 import (
 	"fmt"
 	"net/http"
+	"ninjaGo/internal/env"
+	"ninjaGo/internal/logger"
 	"ninjaGo/internal/pkg/auths"
-	"strings"
+	"ninjaGo/internal/utils"
 
 	"github.com/gorilla/sessions"
 )
 
 func SessionMiddleware(next http.Handler) http.Handler {
+	skipURLS := env.GetSkipURLList()
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sessionValueKey := "user"
+
 		fmt.Println("middleware")
-		if strings.Contains(r.URL.RequestURI(), "login") {
-			fmt.Println("skip-middleware", r.URL.RequestURI())
+
+		if utils.SkipURL(r.URL.RequestURI(), skipURLS) {
+			logger.Debug("skip-middleware", r.URL.RequestURI())
 			next.ServeHTTP(w, r)
 			return
 		}
@@ -24,6 +30,13 @@ func SessionMiddleware(next http.Handler) http.Handler {
 			w.Write([]byte(err.Error()))
 		}
 
+		// check if session exist and is valid
+		if session.IsNew || session.Values[sessionValueKey] == nil {
+			fmt.Println("unauthorized")
+			http.Error(w, "unauthorized", http.StatusUnauthorized)
+			return
+		}
+
 		session.Options = &sessions.Options{
 			Path: "/",
 			// MaxAge:   86400 * 7,
@@ -31,7 +44,7 @@ func SessionMiddleware(next http.Handler) http.Handler {
 			HttpOnly: true,
 		}
 
-		session.Values["user"] = "aakash@user"
+		session.Values[sessionValueKey] = "aakash@user"
 		fmt.Println(session)
 
 		// save the session data

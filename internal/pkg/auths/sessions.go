@@ -11,7 +11,9 @@ const (
 	SESSION_NAME = "ninja-session"
 )
 
-var store = sessions.NewCookieStore([]byte(SESSION_KEY))
+var (
+	store = sessions.NewCookieStore([]byte(SESSION_KEY))
+)
 
 func GetSession(r *http.Request, name string) (*sessions.Session, error) {
 	return store.Get(r, name)

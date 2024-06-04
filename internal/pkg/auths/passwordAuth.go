@@ -5,7 +5,7 @@ import (
 	"ninjaGo/internal/store"
 )
 
-func validateCredential(usr, pass string) error {
+func ValidateCredential(usr, pass string) error {
 	val := store.GetUserPass(usr)
 
 	if val == nil {

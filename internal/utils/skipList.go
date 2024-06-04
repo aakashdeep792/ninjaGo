@@ -1,12 +1,15 @@
 package utils
 
-import "strings"
+import (
+	"strings"
+)
 
 func SkipURL(url string, prefixes []string) bool {
 	url = strings.TrimPrefix(url, "/")
 
 	for _, prefix := range prefixes {
-		if strings.HasPrefix(url, prefix) {
+		// don't compare when prefix is empty
+		if prefix != "" && strings.HasPrefix(url, prefix) {
 			return true
 		}
 	}

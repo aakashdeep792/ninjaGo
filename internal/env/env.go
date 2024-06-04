@@ -15,20 +15,16 @@ const (
 )
 
 var (
-	defaultSkipUrlList = []string{"login"}
-	defaultLOgLevel = logger.INFO
-
+	defaultSkipUrlList = []string{"health-check", "login", "sign-up"}
+	defaultLogLevel    = logger.DEBUG
 )
 
 // GetSkipURLList return a copy of the skipURLList
 func GetSkipURLList() []string {
-	var tmp []string
+	tmp := make([]string, len(skipURLList))
 	copy(tmp, skipURLList)
+
 	return tmp
-}
-
-func SetLogLevel()string{
-
 }
 
 func SetkipURLList() {
@@ -45,16 +41,17 @@ func SetkipURLList() {
 func SetLogLevel() {
 	tmp := os.Getenv(LOG_LEVEL)
 	if tmp == "" {
-		tmp = defaultLOgLevel
-		return
+		tmp = defaultLogLevel
+
 	}
 
-	// err := json.Unmarshal([]byte(tmp), &skipURLList)
-	// logger.Logf(FORMAT, SKIP_URL_LIST, err)
+	logger.UpdateLogLevel(tmp)
+	logger.Logf("Setting LogLevel as %v\n", tmp)
 }
 
 func LoadEnvVariable() {
 	SetkipURLList()
+	SetLogLevel()
 }
 
 // func getORDefaultValue(key ,value string){

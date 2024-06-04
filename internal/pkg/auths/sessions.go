@@ -9,12 +9,13 @@ import (
 const (
 	SESSION_KEY  = "ninja-go"
 	SESSION_NAME = "ninja-session"
+	SESSION_VALUE_KEY = "user"
 )
 
 var (
-	store = sessions.NewCookieStore([]byte(SESSION_KEY))
+	cookieStore = sessions.NewCookieStore([]byte(SESSION_KEY))
 )
 
 func GetSession(r *http.Request, name string) (*sessions.Session, error) {
-	return store.Get(r, name)
+	return cookieStore.Get(r, name)
 }

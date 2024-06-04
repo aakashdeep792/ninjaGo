@@ -24,11 +24,29 @@ func Log(a ...any) {
 }
 
 func Logf(format string, a ...any) {
-	fmt.Printf(format, a...)
+	fmt.Printf(format+"\n", a...)
 }
 
 func Debug(a ...any) {
 	if logLevel == DEBUG {
 		fmt.Println(a...)
 	}
+}
+
+func Debugf(format string, a ...any) {
+	if logLevel == DEBUG {
+		fmt.Printf(format+"\n", a...)
+	}
+}
+
+func Errorf(format string, a ...any) {
+	fmt.Printf(format+"\n", a...)
+}
+
+func Error(a ...any) {
+	fmt.Println(a...)
+}
+
+func Warn(a ...any) {
+	fmt.Println(a...)
 }
